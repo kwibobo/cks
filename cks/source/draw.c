@@ -4,17 +4,37 @@
 
 void draw_bg(int col)
 {
+	if(col==0) col=0x5678;
 	bar1(0,0,MX_W,MX_H,col);
 }
 
-void draw_str(float px,float py,int col,char* str)
+struct str draw_str(float px,float py,int col,char* str)
 {
 	int x=px*MX_W,y=py*MX_H;
 	int len=strlen(str)/2;
 	int w=len*MX_W/36,h=MX_H/27;
-	int x1=x-w,y1=y-h;
+	int x1=x-w,x2=x+w,y1=y-h,y2=y+h;
+	
+	struct str b={0};
+	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2;
+	b.flag=1,b.len=len,b.col=col;
+	strcpy(b.str,str);
 	
 	prt_hz16_size(x1+13*len, y1+12, 2, 2, str, col, "HZK\\HZK16s");
+	
+	return b;
+}
+
+void hide_str(struct str b)
+{
+	bar1(b.x1+11*b.len,b.y1+10,b.x2-11*b.len,b.y2-10,0x5678);
+	b.flag=0;
+}
+
+void show_str(struct str b)
+{
+	prt_hz16_size(b.x1+13*b.len, b.y1+12, 2, 2, b.str, b.col, "HZK\\HZK16s");
+	b.flag=1;
 }
 
 struct textbox draw_textbox(float px,float py,int col,int len)
@@ -23,17 +43,20 @@ struct textbox draw_textbox(float px,float py,int col,int len)
 	int w=len*MX_W/36,h=MX_H/27;
 	int x1=x-w,x2=x+w,y1=y-h,y2=y+h;
 	
-	struct textbox b={0,0,0,0,0,"\0"};
+	struct textbox b={0};
 	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2;
 	b.col=col;
+	
+	Line_Thick(x2+2,y1,x2+2,y2+2,1,0xffff);
+	Line_Thick(x1+1,y2+2,x2+1,y2+2,1,0xffff);
 	
 	bar1(x1,y1,x2,y2,col);
 	bar1(x1,y1,x2,y2,col);
 	
 //	Line_Thick(x1,y1,x1,y2,1,0xffff);
-//	Line_Thick(x2,y1,x2,y2,1,0xffff);
+
 //	Line_Thick(x1,y1,x2,y1,1,0xffff);
-//	Line_Thick(x1,y2,x2,y2,1,0xffff);
+
 	
 	return b;
 }
@@ -43,13 +66,16 @@ void show_textbox(struct textbox b)
 	int x1=b.x1,x2=b.x2,y1=b.y1,y2=b.y2;
 	int col=b.col;
 	
+	Line_Thick(x2+2,y1,x2+2,y2+2,1,0xffff);
+	Line_Thick(x1+1,y2+2,x2+1,y2+2,1,0xffff);
+	
 	bar1(x1,y1,x2,y2,col);
 	bar1(x1,y1,x2,y2,col);
 	
 //	Line_Thick(x1,y1,x1,y2,1,0xffff);
-//	Line_Thick(x2,y1,x2,y2,1,0xffff);
+
 //	Line_Thick(x1,y1,x2,y1,1,0xffff);
-//	Line_Thick(x1,y2,x2,y2,1,0xffff);
+	
 	
 	/*
 		void put_asc16_size(int cx,int cy,int xsize,int ysize,char *s,unsigned int color );
@@ -65,24 +91,46 @@ struct bottom draw_bottom(float px,float py,int col,char* str)
 	int w=len*MX_W/36,h=MX_H/27;
 	int x1=x-w,x2=x+w,y1=y-h,y2=y+h;
 	
-	struct bottom b;
-	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2;
+	struct bottom b={0};
+	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2,b.len=len;
+	b.flag=0;
+	strcpy(b.str,str);
+	
+	Line_Thick(x1-2,y1-2,x1-2,y2+2,1,0xffff);
+	Line_Thick(x2+2,y1-2,x2+2,y2+2,1,0xffff);
+	Line_Thick(x1-2,y1-2,x2+2,y1-2,1,0xffff);
+	Line_Thick(x1-2,y2+2,x2+2,y2+2,1,0xffff);
 	
 	bar1(x1,y1,x2,y2,col);
-	bar1(x1,y1,x2,y2,col);
-	
-	Line_Thick(x1,y1,x1,y2,1,0xffff);
-	Line_Thick(x2,y1,x2,y2,1,0xffff);
-	Line_Thick(x1,y1,x2,y1,1,0xffff);
-	Line_Thick(x1,y2,x2,y2,1,0xffff);
 	
 	prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
 	return b;
 }
 
-int click(struct bottom b)
+int click(struct bottom *b)
 {
-	return mouse_press(b.x1,b.y1,b.x2,b.y2)==1;
+	int x1=b->x1,y1=b->y1,x2=b->x2,y2=b->y2;
+	int len=b->len;
+	char *str=b->str;
+	if(mouse_press(x1,y1,x2,y2)==2 && b->flag==0)
+	{
+		mouse_off(&mouse);
+		bar1(x1,y1,x2,y2,0x4567);
+		prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
+		update_mouse(&mouse);
+		mouse_show(&mouse);
+		b->flag=1;
+	}
+	else if(mouse_press(x1,y1,x2,y2)==0 && b->flag==1)
+	{
+		mouse_off(&mouse);
+		bar1(x1,y1,x2,y2,0x1234);
+		prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");	
+		update_mouse(&mouse);
+		mouse_show(&mouse);
+		b->flag=0;
+	}
+	return mouse_press(x1,y1,x2,y2)==1;
 }
 
 int input(struct textbox *b)
@@ -111,11 +159,11 @@ int input(struct textbox *b)
 			//鼠标闪烁 
 			t2=clock();
 			mouse_show(&mouse);
-			nx=x1+10+strlen(b->str)*16;
-			if(lst==0 && (t2-t1)/8%2==0)
-				Line_Thick(nx,y1+5,nx,y2-5,1,0xffff),lst=1;
-			else if(lst==1 && (t2-t1)/8%2)
-				Line_Thick(nx,y1+5,nx,y2-5,1,col),lst=0;
+			nx=x1+12+strlen(b->str)*16;
+			if(lst==0 && (t2-t1)/9%2==0)
+				Line_Thick(nx,y1+6,nx,y2-7,1,0xffff),lst=1;
+			else if(lst==1 && (t2-t1)/9%2)
+				Line_Thick(nx,y1+6,nx,y2-7,1,col),lst=0;
 			
 			if (bioskey(1))	//如果有按键按下，则kbhit()函数返回真
 			{		

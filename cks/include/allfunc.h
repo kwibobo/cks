@@ -18,6 +18,7 @@
 #include "BMP.h"
 
 #include"draw.h"
+#include"filefunc.h"
 #include"page.h"
 
 
