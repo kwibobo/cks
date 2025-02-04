@@ -3,7 +3,7 @@
 void page105(int *idx)
 {
 	struct bottom b1,b2,b3,b4;
-	struct textbox t1,t2,t3,t4,t5,t6,t7,t8,t9,t10;
+	struct textbox t1,t2,t3,t4,t5,t6,t7,t8,t9_1,t9_2,t9_3,t10;
 	struct str s1,s2,s3,s4,s5;
 	struct user p={0};
 	int flag=0,t=0;
@@ -21,6 +21,10 @@ void page105(int *idx)
     draw_str(0.6,0.65,0xffff,"车辆品牌：");
     draw_str(0.1,0.8,0xffff,"购买时间：");
     draw_str(0.58,0.8,0xffff,"行驶证编号：");
+    
+    draw_str(0.295,0.8,0xffff,"年");
+    draw_str(0.385,0.8,0xffff,"月");
+    draw_str(0.47,0.8,0xffff,"日");
     
 //    s1=draw_str(0.5,0.8,0xe000,"用户名未注册");
 //    s2=draw_str(0.5,0.8,0xe000,"密码错误");
@@ -45,7 +49,11 @@ void page105(int *idx)
     t6=draw_textbox(0.82,0.5,0x3456,5);
     t7=draw_textbox(0.32,0.65,0x3456,5);
     t8=draw_textbox(0.82,0.65,0x3456,5);
-    t9=draw_textbox(0.32,0.8,0x3456,5);
+    
+    t9_1=draw_textbox(0.225,0.8,0x3456,2);
+    t9_2=draw_textbox(0.34,0.8,0x3456,1);
+    t9_3=draw_textbox(0.425,0.8,0x3456,1);
+    
     t10=draw_textbox(0.82,0.8,0x3456,5);
     
     b1=draw_bottom(0.35,0.92,0x1234,"上一步"); 
@@ -66,7 +74,9 @@ void page105(int *idx)
 		input(&t6);
 		input(&t7);
 		input(&t8);
-		input(&t9);
+		input(&t9_1);
+		input(&t9_2);
+		input(&t9_3);
 		input(&t10);
 		if(click(&b1)) flag=191;
 		else if(click(&b2)) flag=105;

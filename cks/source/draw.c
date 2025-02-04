@@ -45,6 +45,7 @@ struct textbox draw_textbox(float px,float py,int col,int len)
 	
 	struct textbox b={0};
 	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2;
+	b.len=len;
 	b.col=col;
 	
 	Line_Thick(x2+2,y1,x2+2,y2+2,1,0xffff);
@@ -133,11 +134,14 @@ int click(struct bottom *b)
 	}
 	return mouse_press(x1,y1,x2,y2)==1;
 }
-
+int to_len(int x)
+{
+	return 0.4*x*x+0.8*x+1;
+}
 int input(struct textbox *b)
 {
 	int x1=b->x1,y1=b->y1,x2=b->x2,y2=b->y2;
-	int col=b->col;
+	int col=b->col,tlen=to_len(b->len);
 	int t1=clock(),t2;
 	int lst=0,temp,nx;
 	int i,j,cnt=strlen(b->str);
@@ -171,7 +175,7 @@ int input(struct textbox *b)
             	temp = bioskey(0)&0x00ff;	//使用getch()函数获取按下的键值
 				if(temp!='\r'&&temp!='\n')	//检测输入不为回车键，则继续，否则输入结束
 				{
-					if((('0'<=temp&&temp<='9')||('a'<=temp&&temp<='z')||temp=='_'||('A'<=temp&&temp<='Z'))&&cnt<18)	//检测为数字或字母或下划线，则记录
+					if((('0'<=temp&&temp<='9')||('a'<=temp&&temp<='z')||temp=='_'||('A'<=temp&&temp<='Z'))&&cnt<tlen)	//检测为数字或字母或下划线，则记录
 					{
 						ch[0]=temp;
 						strcat(b->str,ch);
