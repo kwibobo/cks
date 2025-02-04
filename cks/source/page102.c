@@ -17,7 +17,7 @@ void page102(int *idx)
 	while(!flag)   
 	{
 		mouse_show(&mouse);	
-		if(click(&b1)) flag=105;
+		if(click(&b1)) flag=190;
 		else if(click(&b2)) flag=106;
 		else if(click(&b3)) flag=100;
 	}

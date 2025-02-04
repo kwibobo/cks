@@ -93,6 +93,7 @@ struct bottom draw_bottom(float px,float py,int col,char* str)
 	
 	struct bottom b={0};
 	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2,b.len=len;
+	b.col=col;
 	b.flag=0;
 	strcpy(b.str,str);
 	
@@ -124,7 +125,7 @@ int click(struct bottom *b)
 	else if(mouse_press(x1,y1,x2,y2)==0 && b->flag==1)
 	{
 		mouse_off(&mouse);
-		bar1(x1,y1,x2,y2,0x1234);
+		bar1(x1,y1,x2,y2,b->col);
 		prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");	
 		update_mouse(&mouse);
 		mouse_show(&mouse);

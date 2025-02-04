@@ -12,38 +12,23 @@ void main()
 	while(idx>0)   
 	{
 		mouse_show(&mouse);
-		switch(idx)
+		switch(idx/100)
 		{
-			case 100:
+			case 1:
 			{
-				mouse_off(&mouse);
-				page100(&idx);
+				pageset1(&idx);
 				break;
 			}
-			case 101:
-			{
-				mouse_off(&mouse);
-				page101(&idx);
-				break;
-			}
-			case 102:
-			{
-				mouse_off(&mouse);
-				page102(&idx);
-				break;
-			}
-			case 103:
-			{
-				mouse_off(&mouse);
-				page103(&idx);
-				break;
-			}
-			case 104:
-			{
-				mouse_off(&mouse);
-				page104(&idx);
-				break;
-			}
+//			case 2:
+//			{
+//				pageset2(&idx);
+//				break;
+//			}
+//			case 3:
+//			{
+//				pageset3(&idx);
+//				break;
+//			}
 		}
 	}
 	CloseSVGA();//关闭图形界面 

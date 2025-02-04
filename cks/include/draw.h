@@ -11,7 +11,7 @@ struct str
 struct bottom
 {
 	int x1,y1,x2,y2;
-	int len;
+	int len,col;
 	char str[80];
 	int flag;
 };
