@@ -36,7 +36,6 @@ void show_str(struct str b)
 	prt_hz16_size(b.x1+13*b.len, b.y1+12, 2, 2, b.str, b.col, "HZK\\HZK16s");
 	b.flag=1;
 }
-
 struct textbox draw_textbox(float px,float py,int col,int len)
 {
 	int x=px*MX_W,y=py*MX_H;
@@ -54,11 +53,6 @@ struct textbox draw_textbox(float px,float py,int col,int len)
 	bar1(x1,y1,x2,y2,col);
 	bar1(x1,y1,x2,y2,col);
 	
-//	Line_Thick(x1,y1,x1,y2,1,0xffff);
-
-//	Line_Thick(x1,y1,x2,y1,1,0xffff);
-
-	
 	return b;
 }
 
@@ -73,11 +67,6 @@ void show_textbox(struct textbox b)
 	bar1(x1,y1,x2,y2,col);
 	bar1(x1,y1,x2,y2,col);
 	
-//	Line_Thick(x1,y1,x1,y2,1,0xffff);
-
-//	Line_Thick(x1,y1,x2,y1,1,0xffff);
-	
-	
 	/*
 		void put_asc16_size(int cx,int cy,int xsize,int ysize,char *s,unsigned int color );
 	*/
@@ -91,6 +80,7 @@ struct bottom draw_bottom(float px,float py,int col,char* str)
 	int len=strlen(str)/2;
 	int w=len*MX_W/36,h=MX_H/27;
 	int x1=x-w,x2=x+w,y1=y-h,y2=y+h;
+	char ts[80];
 	
 	struct bottom b={0};
 	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2,b.len=len;
@@ -104,8 +94,70 @@ struct bottom draw_bottom(float px,float py,int col,char* str)
 	Line_Thick(x1-2,y2+2,x2+2,y2+2,1,0xffff);
 	
 	bar1(x1,y1,x2,y2,col);
+	if(str[0]=='/' && str[strlen(str)-1]=='/')
+	{
+		strcpy(ts,str+1);
+		strcpy(ts+strlen(ts)-1,"");
+		put_asc16_size(x1+13*len, y1+12, 2, 2 , ts,0xffff);
+	}	
+	else prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
+	return b;
+}
+
+struct selectbox draw_selectbox(float px,float py,int col,int len,char *str)
+{	
+	int x=px*MX_W,y=py*MX_H;
+	int w=len*MX_W/36,h=MX_H/27;
+	int x1=x-w,x2=x+w,y1=y-h,y2=y+h;
+	int i,slen;
+	char s[80];
 	
-	prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
+	struct selectbox b;
+	
+	b.x1=x1,b.x2=x2,b.y1=y1,b.y2=y2;
+	b.len=len;
+	b.col=col;
+	
+	b.l.y1=b.r.y1=y1;
+	b.l.y2=b.r.y2=y2;
+	b.l.x1=x1;
+	b.l.x2=x1+6*len-4;
+	b.r.x1=x2-6*len+4;
+	b.r.x2=x2;
+	b.l.col=b.r.col=col;
+	b.l.len=b.r.len=0;
+	b.l.flag=b.r.flag=0;
+	
+	strcpy(b.l.str,"/</");
+	strcpy(b.r.str,"/>/");
+
+	b.cnt=b.p=0;
+	strcpy(s,str);
+	slen=strlen(s);
+	for(i=slen-1;i>=0;i--)
+		if(s[i]=='/')
+		{
+			strcpy(b.str[b.cnt++],s+i+1);
+			strcpy(s+i,"\0");
+		}
+
+	Line_Thick(x1-2,y1-2,x1-2,y2+2,1,0xffff);
+	Line_Thick(x2+2,y1-2,x2+2,y2+2,1,0xffff);
+	Line_Thick(x1-2,y1-2,x2+2,y1-2,1,0xffff);
+	Line_Thick(x1-2,y2+2,x2+2,y2+2,1,0xffff);
+	
+	Line_Thick(x1+6*len-2,y1-2,x1+6*len-2,y2+2,1,0xffff);
+	Line_Thick(x2-6*len+2,y1-2,x2-6*len+2,y2+2,1,0xffff);
+	
+	bar1(x1+6*len,y1,x2-6*len,y2,col);
+	
+	bar1(x1,y1,x1+6*len-4,y2,col);
+	
+	bar1(x2-6*len+4,y1,x2,y2,col);
+	
+	prt_hz16_size(x1+13*len, y1+12, 2, 2, "«Î—°‘Ò", 0xffff, "HZK\\HZK16s");
+	put_asc16_size(b.l.x1+2, y1+12, 2, 2 , "<",0xffff);
+	put_asc16_size(b.r.x1+2, y1+12, 2, 2, ">",0xffff);
 	return b;
 }
 
@@ -113,12 +165,18 @@ int click(struct bottom *b)
 {
 	int x1=b->x1,y1=b->y1,x2=b->x2,y2=b->y2;
 	int len=b->len;
-	char *str=b->str;
+	char *str=b->str,ts[80];
 	if(mouse_press(x1,y1,x2,y2)>=1 && b->flag==0)
 	{
 		mouse_off(&mouse);
 		bar1(x1,y1,x2,y2,0x4567);
-		prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
+		if(str[0]=='/' && str[strlen(str)-1]=='/')
+		{
+			strcpy(ts,str+1);
+			strcpy(ts+strlen(ts)-1,"");
+			put_asc16_size(x1+2+13*len, y1+12, 2, 2 , ts,0xffff);
+		}	
+		else prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
 		update_mouse(&mouse);
 		mouse_show(&mouse);
 		b->flag=1;
@@ -127,7 +185,13 @@ int click(struct bottom *b)
 	{
 		mouse_off(&mouse);
 		bar1(x1,y1,x2,y2,b->col);
-		prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");	
+		if(str[0]=='/' && str[strlen(str)-1]=='/')
+		{
+			strcpy(ts,str+1);
+			strcpy(ts+strlen(ts)-1,"");
+			put_asc16_size(x1+2+13*len, y1+12, 2, 2 , ts,0xffff);
+		}	
+		else prt_hz16_size(x1+13*len, y1+12, 2, 2, str, 0xffff, "HZK\\HZK16s");
 		update_mouse(&mouse);
 		mouse_show(&mouse);
 		b->flag=0;
@@ -207,3 +271,24 @@ int input(struct textbox *b)
 	}
 	return 0;
 }
+int choose(struct selectbox *b)
+{
+	int x1=b->x1,x2=b->x2,y1=b->y1,y2=b->y2,cnt=b->cnt,len=b->len,col=b->col;
+	if(click(&(b->l)))
+	{
+		b->p=(b->p+1)%cnt;
+		bar1(x1+6*len,y1,x2-6*len,y2,col);	
+		prt_hz16_size(x1+13*len, y1+12, 2, 2, b->str[b->p], 0xffff, "HZK\\HZK16s");
+		return 1;
+	}
+	else if(click(&(b->r)))
+	{
+		b->p=(b->p-1+cnt)%cnt;
+		bar1(x1+6*len,y1,x2-6*len,y2,col);	
+		prt_hz16_size(x1+13*len, y1+12, 2, 2, b->str[b->p], 0xffff, "HZK\\HZK16s");
+		return 1;
+	}
+	else return 0;
+
+}
+

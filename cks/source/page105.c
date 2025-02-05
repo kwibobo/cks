@@ -10,10 +10,11 @@ int check_phone(char*s);
 void page105(int *idx)
 {
 	struct bottom b1,b2,b3,b4;
-	struct textbox t1,t2,t3,t4,t5,t6,t7_1,t7_2,t7_3,t8;
+	struct textbox t1,t2,t3,t4,t5,t7_1,t7_2,t7_3,t8;
+	struct selectbox t6;
 	struct str s;
 	struct user p={0};
-	int flag=0,t=0;
+	int flag=0,t=0,ch6=0;
 	char tt[80]={0};
 	
 	draw_bg(0);
@@ -43,7 +44,8 @@ void page105(int *idx)
     t4=draw_textbox(0.82,0.4,0x3456,5);
     
     t5=draw_textbox(0.32,0.55,0x3456,5);
-    t6=draw_textbox(0.82,0.55,0x3456,5);
+    
+    t6=draw_selectbox(0.82,0.55,0x3456,5,"/雅迪/爱玛/九号/凤凰/新日/飞鸽/小刀/绿源/小牛电动/台铃/五羊/其他");
     
     t7_1=draw_textbox(0.225,0.7,0x3456,2);
     t7_2=draw_textbox(0.34,0.7,0x3456,1);
@@ -66,7 +68,7 @@ void page105(int *idx)
 		input(&t3);
 		input(&t4);
 		input(&t5);
-		input(&t6);
+		ch6|=choose(&t6);
 		input(&t7_1);
 		input(&t7_2);
 		input(&t7_3);
@@ -76,14 +78,15 @@ void page105(int *idx)
 		{	
 			hide_str(s);
 			
-			t=creat_time(t7_1.str,t7_2.str,t7_3.str,tt);
+			
 
 			strcpy(p.username,t1.str);
 			strcpy(p.password,t2.str);
 			strcpy(p.id,t3.str);
 			strcpy(p.phone,t4.str);
 			strcpy(p.a.id,t5.str);
-			strcpy(p.a.p,t6.str);		
+			strcpy(p.a.p,to_string(t6.p,tt));
+			t=creat_time(t7_1.str,t7_2.str,t7_3.str,tt);	
 			strcpy(p.a.time,tt);
 			strcpy(p.a.lid,t8.str);
 			
@@ -101,8 +104,8 @@ void page105(int *idx)
 				s=draw_str(0.78,0.48,0xe000,"请填写中国大陆十一位手机号");
 			else if(strlen(p.a.id)==0)
 				s=draw_str(0.32,0.63,0xe000,"车牌号不能为空");
-			else if(strlen(p.a.p)==0)
-				s=draw_str(0.82,0.63,0xe000,"车辆品牌不能为空");
+			else if(ch6==0)
+				s=draw_str(0.82,0.63,0xe000,"请选择车辆品牌");
 			else if(t==-1)
 				s=draw_str(0.32,0.78,0xe000,"购买时间不能为空");
 			else if(t==0)
