@@ -4,7 +4,7 @@ void page103(int *idx)
 {
 	struct bottom b1,b2,b3,b4;
 	struct textbox t1,t2;
-	struct str s1,s2,s3,s4,s5;
+	struct str s;
 	struct user p={0};
 	int flag=0,t=0;
 	
@@ -14,23 +14,12 @@ void page103(int *idx)
     draw_str(0.3,0.4,0xffff,"用户名：");
     draw_str(0.3,0.55,0xffff,"密码：");
     
-    s1=draw_str(0.5,0.8,0xe000,"用户名未注册");
-    s2=draw_str(0.5,0.8,0xe000,"密码错误");
-    s3=draw_str(0.5,0.8,0x2345,"登录成功");
-    s4=draw_str(0.5,0.8,0xe000,"用户名不能为空");
-    s5=draw_str(0.5,0.8,0xe000,"密码不能为空");
+    s=draw_str(0.5,0.8,0x2345,"登录成功");
     
-    #ifdef HIDE
-	#undef HIDE
-	#endif 
-	
-    #define HIDE \
-		hide_str(s1),hide_str(s2),hide_str(s3),hide_str(s4),hide_str(s5);
+    hide_str(s); 
     
-	HIDE
-    
-    t1=draw_textbox(0.6,0.4,0x3456,6);
-    t2=draw_textbox(0.6,0.55,0x3456,6);
+    t1=draw_textbox(0.55,0.4,0x3456,6);
+    t2=draw_textbox(0.55,0.55,0x3456,6);
     
     b1=draw_bottom(0.35,0.7,0x1234,"忘记密码"); 
     b2=draw_bottom(0.65,0.7,0xe000,"点击登录");
@@ -49,28 +38,25 @@ void page103(int *idx)
 		if(click(&b1)) flag=103;
 		else if(click(&b2))
 		{
-			HIDE
+			hide_str(s);
 			strcpy(p.username,t1.str);
 			strcpy(p.password,t2.str);
+			
 			if(strlen(p.username)==0)
-				show_str(s4);
+				s=draw_str(0.5,0.48,0xe000,"用户名不能为空");
 			else if(strlen(p.password)==0)
-				show_str(s5);
+				s=draw_str(0.5,0.63,0xe000,"密码不能为空");
 			else
 			{
 				t=find_user_list(p);
 				if(t==-1) exit(0); 
-				else if(t==0) show_str(s1);
-				else if(t==1) show_str(s2);
-				else if(t==2) show_str(s3);
+				else if(t==0) s=draw_str(0.5,0.48,0xe000,"用户名未注册");
+				else if(t==1) s=draw_str(0.5,0.63,0xe000,"密码错误");
+				else if(t==2) s=draw_str(0.5,0.8,0x2345,"登录成功");
 			}
 		}
 		else if(click(&b3)) flag=100;
 		else if(click(&b4)) flag=105;
 	}
 	*idx=flag;
-	
-	#ifdef HIDE
-	#undef HIDE
-	#endif 
 }

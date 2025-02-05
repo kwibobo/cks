@@ -5,11 +5,13 @@ int creat_time(char*yy,char*mm,char*dd,char*str);
 
 int check_date(int y,int m,int d);
 
+int check_phone(char*s);
+
 void page105(int *idx)
 {
 	struct bottom b1,b2,b3,b4;
 	struct textbox t1,t2,t3,t4,t5,t6,t7_1,t7_2,t7_3,t8;
-	struct str s1_1,s1_2,s2,s3,s4,s5,s6,s7_1,s7_2,s8,s9;
+	struct str s;
 	struct user p={0};
 	int flag=0,t=0;
 	char tt[80]={0};
@@ -29,32 +31,10 @@ void page105(int *idx)
     draw_str(0.295,0.7,0xffff,"年");
     draw_str(0.385,0.7,0xffff,"月");
     draw_str(0.47,0.7,0xffff,"日");
+       
+    s=draw_str(0.88,0.9,0x2345,"注册成功");
     
-    s1_1=draw_str(0.32,0.33,0xe000,"用户名已存在");
-    s1_2=draw_str(0.32,0.33,0xe000,"用户名不能为空");
-    s2=draw_str(0.82,0.33,0xe000,"密码不能为空");
-
-    s3=draw_str(0.32,0.48,0xe000,"学号不能为空");
-    s4=draw_str(0.82,0.48,0xe000,"联系电话不能为空");
-    
-    s5=draw_str(0.32,0.63,0xe000,"车牌号不能为空");
-    s6=draw_str(0.82,0.63,0xe000,"车辆品牌不能为空");
-    
-    s7_1=draw_str(0.32,0.78,0xe000,"购买时间不能为空");
-    s7_2=draw_str(0.32,0.78,0xe000,"请正确填写购买时间");
-    s8=draw_str(0.82,0.78,0xe000,"行驶证编号不能为空");
-    
-    s9=draw_str(0.88,0.9,0x2345,"注册成功");
-    
-    #ifdef HIDE
-	#undef HIDE
-	#endif 
-	
-    #define HIDE \
-		hide_str(s1_1),hide_str(s1_2),hide_str(s2),hide_str(s3),hide_str(s4),\
-		hide_str(s5),hide_str(s6),hide_str(s7_1),hide_str(s7_2),hide_str(s8),hide_str(s9);
-    
-	HIDE
+    hide_str(s);
     
     t1=draw_textbox(0.32,0.25,0x3456,5);
     t2=draw_textbox(0.82,0.25,0x3456,5);
@@ -94,7 +74,7 @@ void page105(int *idx)
 		if(click(&b1)) flag=191;
 		else if(click(&b2))
 		{	
-			HIDE
+			hide_str(s);
 			
 			t=creat_time(t7_1.str,t7_2.str,t7_3.str,tt);
 
@@ -108,33 +88,37 @@ void page105(int *idx)
 			strcpy(p.a.lid,t8.str);
 			
 			if(strlen(p.username)==0)
-				show_str(s1_2);
+				s=draw_str(0.32,0.33,0xe000,"用户名不能为空");	
 			else if(strlen(p.password)==0)
-				show_str(s2);
+				s=draw_str(0.82,0.33,0xe000,"密码不能为空");
 			else if(strlen(p.id)==0)
-				show_str(s3);
+				s=draw_str(0.32,0.48,0xe000,"学号不能为空");
 			else if(strlen(p.phone)==0)
-				show_str(s4);
+				s=draw_str(0.82,0.48,0xe000,"联系电话不能为空");
+			else if(check_phone(p.phone)==0)
+				s=draw_str(0.82,0.48,0xe000,"请正确填写联系电话");
+			else if(strlen(p.phone)!=11)
+				s=draw_str(0.78,0.48,0xe000,"请填写中国大陆十一位手机号");
 			else if(strlen(p.a.id)==0)
-				show_str(s5);
+				s=draw_str(0.32,0.63,0xe000,"车牌号不能为空");
 			else if(strlen(p.a.p)==0)
-				show_str(s6);
+				s=draw_str(0.82,0.63,0xe000,"车辆品牌不能为空");
 			else if(t==-1)
-				show_str(s7_1);
+				s=draw_str(0.32,0.78,0xe000,"购买时间不能为空");
 			else if(t==0)
-				show_str(s7_2);
+				s=draw_str(0.32,0.78,0xe000,"请正确填写购买时间");
 			else if(strlen(p.a.lid)==0)
-				show_str(s8);
+				s=draw_str(0.82,0.78,0xe000,"行驶证编号不能为空");
 			else
 			{
 				t=find_user_list(p);
 				if(t==-1) exit(0);
 				else if(t>0)
-					show_str(s1_1);
+					s=draw_str(0.32,0.33,0xe000,"用户名已存在");
 				else
 				{
 					t=add_user_list(p);
-					if(t==1) show_str(s9);
+					if(t==1) s=draw_str(0.88,0.9,0x2345,"注册成功");
 				}
 			}
 			
@@ -144,10 +128,14 @@ void page105(int *idx)
 		else if(click(&b4)) flag=103; 
 	}
 	*idx=flag;
-	
-	#ifdef HIDE
-	#undef HIDE
-	#endif 
+}
+
+int check_phone(char*s)
+{
+	int i;
+	for(i=0;i<strlen(s);i++)
+		if(s[i]>'9' || s[i]<'0') return 0;
+	return 1;
 }
 
 int check_date(int y,int m,int d)
