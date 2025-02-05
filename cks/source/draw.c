@@ -114,7 +114,7 @@ int click(struct bottom *b)
 	int x1=b->x1,y1=b->y1,x2=b->x2,y2=b->y2;
 	int len=b->len;
 	char *str=b->str;
-	if(mouse_press(x1,y1,x2,y2)==2 && b->flag==0)
+	if(mouse_press(x1,y1,x2,y2)>=1 && b->flag==0)
 	{
 		mouse_off(&mouse);
 		bar1(x1,y1,x2,y2,0x4567);
@@ -132,11 +132,17 @@ int click(struct bottom *b)
 		mouse_show(&mouse);
 		b->flag=0;
 	}
-	return mouse_press(x1,y1,x2,y2)==1;
+	if(mouse_press(x1,y1,x2,y2)==1)
+	{
+		while(mouse_press(x1,y1,x2,y2)==1) mouse_show(&mouse);
+		return 1;
+	}
+	else return 0;
 }
 int to_len(int x)
 {
 	return 0.4*x*x+0.8*x+1;
+//	return 0.3*x*x+1.5*x+0.5;
 }
 int input(struct textbox *b)
 {

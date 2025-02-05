@@ -179,8 +179,9 @@ int MouseIn(int x1, int y1, int x2, int y2)
 /***判断鼠标左键是否在指定区域内按下***/
 int mouse_press(int x1, int y1, int x2, int y2)
 { 
-	MOUSE mouse = {0,0,0};                       
-	MouseGet(&mouse);       
+	MOUSE mouse = {0,0,0};
+	int cnt=0;                       
+	MouseGet(&mouse);   
 	if ((mouse.x >= x1)
 		&& (mouse.x <= x2)
 		&& (mouse.y >= y1)
