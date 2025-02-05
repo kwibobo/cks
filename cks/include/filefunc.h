@@ -4,6 +4,7 @@
 struct car
 {
 	char id[20],p[20],time[20];
+	char col[20],loc[20];
 	char lid[20];
 };
 
