@@ -10,7 +10,7 @@ struct car
 struct user
 {
 	char username[20],password[20];
-	char name[20],school[20],id[20],phone[20];
+	char id[20],phone[20];
 	struct car a;
 };
 

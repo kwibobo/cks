@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+using namespace std;
 void change(char*str)
 {
 	int len=strlen(str);
@@ -36,25 +37,48 @@ char* to_string(int x,char *str)
 	}
 	return str;
 }
-int main()
+int check_date(int y,int m,int d)
 {
-	int cnt,i,j;
-	FILE *data=fopen("..\\data\\userdata.dat","wt");
-	char str[80];
-	int flag=1,ans=-1;
+	time_t p;
+	struct tm *t;
+	int flag=0,a[]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+	int ty,tm,td;
 	
-	rewind(data);
+	if(y==0 || m==0 || d==0) return 0;
 	
-	for(i=0;i<1;i++)
+	time(&p);
+	t=gmtime(&p);
+	
+	ty=1900+t->tm_year;
+	tm=t->tm_mon+1;
+	td=t->tm_mday;
+	
+	if(y>ty) return 0;
+	else if(y==ty)
 	{
-		for(j=0;j<10;j++)
+		if(m>tm) return 0;
+		else if(m==tm)
 		{
-
-			change(str);
-			fputs("2",data);
-			fputs("\n",data);
+			if(d>td) return 0;
 		}
 	}
+	if(y%4==0)
+	{
+		if(y%100==0)
+		{
+			if(y%400==0) flag=1;
+			else flag=0;
+		}
+		else flag=1;
+	}
+	else flag=0;
+	a[2]+=flag;
 	
-	fclose(data);
+	if(y<1900 || m>12 || d>a[m]) return 0;
+	return 1;
+	
+}
+int main()
+{
+	cout<<check_date(2001,1,13);
 }

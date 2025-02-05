@@ -59,7 +59,7 @@ int add_user_list(struct user p)
 	for(i=0;i<cnt;i++)
 	{
 		flag=1;
-		for(j=0;j<10;j++)
+		for(j=0;j<8;j++)
 		{
 			fgets(str,80,data);
 			change(str);
@@ -83,10 +83,6 @@ int add_user_list(struct user p)
 		fputs(p.username,temp);
 		fputs("\n",temp);
 		fputs(p.password,temp);
-		fputs("\n",temp);
-		fputs(p.name,temp);
-		fputs("\n",temp);
-		fputs(p.school,temp);
 		fputs("\n",temp);
 		fputs(p.id,temp);
 		fputs("\n",temp);
@@ -140,7 +136,7 @@ int find_user_list(struct user p)
 	for(i=0;i<cnt;i++)
 	{
 		flag=0;
-		for(j=0;j<10;j++)
+		for(j=0;j<8;j++)
 		{
 			fgets(str,80,data);
 			change(str);
