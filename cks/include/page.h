@@ -11,7 +11,10 @@ void page102(int *idx);
 void page103(int *idx);
 void page104(int *idx);
 void page105(int *idx);
+void page106(int *idx);
 
+void page110(int *idx);
+void page111(int *idx);
 
 void page190(int *idx);
 void page191(int *idx);

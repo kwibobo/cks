@@ -5,7 +5,7 @@ int creat_time(char*yy,char*mm,char*dd,char*str);
 
 int check_date(int y,int m,int d);
 
-int check_phone(char*s);
+static int check_phone(char*s);
 
 void page105(int *idx)
 {
@@ -41,9 +41,9 @@ void page105(int *idx)
     draw_str(0.385,0.8,0xffff,"月");
     draw_str(0.47,0.8,0xffff,"日");
        
-    s=draw_str(0.88,0.93,0x2345,"注册成功");
+    // s=draw_str(0.88,0.93,0x2345,"注册成功");
     
-    hide_str(s);
+    // hide_str(s);
     
     t1=draw_textbox(0.32,0.2,0x3456,5);
     t2=draw_textbox(0.82,0.2,0x3456,5);
@@ -115,7 +115,7 @@ void page105(int *idx)
 			else if(check_phone(p.phone)==0)
 				s=draw_str(0.82,0.43,0xe000,"请正确填写联系电话");
 			else if(strlen(p.phone)!=11)
-				s=draw_str(0.83,0.43,0xe000,"请填写中国大陆十一位手机号");
+				s=draw_str(0.80,0.43,0xe000,"请填写中国大陆十一位手机号");
 			else if(strlen(p.a.id)==0)
 				s=draw_str(0.32,0.58,0xe000,"车牌号不能为空");
 			else if(ch6==0)
@@ -151,7 +151,7 @@ void page105(int *idx)
 	*idx=flag;
 }
 
-int check_phone(char*s)
+static int check_phone(char*s)
 {
 	int i;
 	for(i=0;i<strlen(s);i++)

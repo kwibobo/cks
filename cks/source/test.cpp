@@ -82,3 +82,51 @@ int main()
 {
 	cout<<check_date(2001,1,13);
 }
+
+ for (i = 0; i < cnt; i++)
+    {
+		flag = 1;
+		for(j = 0; j < 10; j++)
+		{
+			fgets(str, 20, data);
+			change(str);
+			if(j==0)
+			    flag&=(strcmp(str,p.username)==0);
+			else if(j==3)
+			{
+				if(flag && (strcmp(str,p.phone)==0))
+				{
+					fclose(data);
+                    return 2; 
+				}
+				else if(flag){
+					ans = 1;
+				}
+			}
+		}
+    }
+for (i = 0; i < cnt; i++)
+    {
+        char username[80], phone[80];
+
+        fgets(username, 80, data); // 读取用户名
+        change(username);
+        fgets(str, 80, data);  
+        fgets(str, 80, data);  
+        fgets(phone, 80, data); // 读取联系方式
+        change(phone);
+        fgets(str, 80, data);  
+        fgets(str, 80, data);  
+        fgets(str, 80, data);  
+        fgets(str, 80, data);  
+
+        if (strcmp(username, p.username) == 0)
+        {
+            if(strcmp(phone, p.phone))
+                ans = 1;       
+            else{
+            fclose(data);
+            return 2; 
+            }
+        }
+    }

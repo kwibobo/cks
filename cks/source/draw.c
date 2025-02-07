@@ -239,6 +239,7 @@ int input(struct textbox *b)
 				Line_Thick(nx,y1+6,nx,y2-7,1,0xffff),lst=1;
 			else if(lst==1 && (t2-t1)/9%2)
 				Line_Thick(nx,y1+6,nx,y2-7,1,col),lst=0;
+				
 			
 			if (bioskey(1))	//如果有按键按下，则kbhit()函数返回真
 			{		
@@ -257,11 +258,15 @@ int input(struct textbox *b)
 						cnt--;
 					}
 					show_textbox(*b);
+					if(mouse_press(x1,y1,x2-18,y2-15)>0)
+						update_mouse(&mouse); 
 					mouse_show(&mouse);
 				}
 				else
 				{
 					show_textbox(*b);
+					if(mouse_press(x1,y1,x2-18,y2-15)>0)
+						update_mouse(&mouse); 
 					mouse_show(&mouse);
 					break;
 				}

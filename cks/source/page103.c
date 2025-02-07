@@ -14,10 +14,6 @@ void page103(int *idx)
     draw_str(0.3,0.4,0xffff,"用户名：");
     draw_str(0.3,0.55,0xffff,"密码：");
     
-    s=draw_str(0.5,0.8,0x2345,"登录成功");
-    
-    hide_str(s); 
-    
     t1=draw_textbox(0.55,0.4,0x3456,6);
     t2=draw_textbox(0.55,0.55,0x3456,6);
     
@@ -35,7 +31,7 @@ void page103(int *idx)
 		input(&t1);
 		input(&t2);
 		
-		if(click(&b1)) flag=103;
+		if(click(&b1)) flag=110;
 		else if(click(&b2))
 		{
 			hide_str(s);
